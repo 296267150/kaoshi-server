@@ -10,6 +10,7 @@ var users = require('./routes/users');
 var fangxiang = require('./routes/fangxiang');
 var login = require('./routes/login');
 var classes = require('./routes/classes');
+var stu = require('./routes/stu');
 
 var app = express();
 app.listen(8888);
@@ -31,6 +32,7 @@ app.use('/users', users);
 app.use('/api/fangxiang', fangxiang);
 app.use("/api/login",login)
 app.use("/api/classes",classes)
+app.use("/api/stu",stu)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

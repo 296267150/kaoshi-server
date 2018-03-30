@@ -13,4 +13,12 @@ router.get('/add', function(req, res, next) {
     })
 });
 
+router.get("/select",function (req,res) {
+
+    mysql.query("select classes.*,fangxiang.fname from classes,fangxiang where classes.fid=fangxiang.fid",function (err,result) {
+
+        res.end(JSON.stringify(result));
+    })
+})
+
 module.exports = router;
