@@ -69,25 +69,29 @@ router.post("/upload",upload.single("aa"),function (req,res) {
 })
 
 router.get("/selectAll",function (req,res) {
-    mysql.query("select * from stu",function (err,result) {
+    var like=req.query.like?"where stu.name like '%"+req.query.like+"%'":''
+    mysql.query("select * from stu "+like,function (err,result) {
         if(err){
             res.end(JSON.stringify({message:"err"}))
 
         }else{
-
             res.end(Math.ceil(result.length/10).toString());
         }
     })
 })
 
+
+
 router.get("/select",function (req,res) {
     var start=req.query.page*10;
-    
-    mysql.query("select stu.*,classes.name as cname from stu,classes where stu.cid=classes.id limit "+start+",10",function (err,result) {
+    var like=req.query.like?"and stu.name like '%"+req.query.like+"%'":''
+    var sql="select stu.*,classes.name as cname from stu,classes where stu.cid=classes.id "+ like+" limit "+start+",10"
+
+    console.log(sql);
+    mysql.query(sql,function (err,result) {
         if(err){
             res.end(JSON.stringify({message:"err"}))
         }else{
-            console.log(result);
             res.end(JSON.stringify(result));
         }
     })
