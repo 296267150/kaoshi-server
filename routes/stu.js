@@ -72,6 +72,7 @@ router.get("/selectAll",function (req,res) {
     mysql.query("select * from stu",function (err,result) {
         if(err){
             res.end(JSON.stringify({message:"err"}))
+
         }else{
 
             res.end(Math.ceil(result.length/10).toString());
