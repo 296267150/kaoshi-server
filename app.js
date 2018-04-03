@@ -11,7 +11,7 @@ var fangxiang = require('./routes/fangxiang');
 var login = require('./routes/login');
 var classes = require('./routes/classes');
 var stu = require('./routes/stu');
-
+var type = require('./routes/type');
 var app = express();
 app.listen(8888);
 
@@ -33,6 +33,7 @@ app.use('/api/fangxiang', fangxiang);
 app.use("/api/login",login)
 app.use("/api/classes",classes)
 app.use("/api/stu",stu)
+app.use("/api/type",type)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
