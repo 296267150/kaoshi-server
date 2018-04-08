@@ -12,8 +12,18 @@ var login = require('./routes/login');
 var classes = require('./routes/classes');
 var stu = require('./routes/stu');
 var type = require('./routes/type');
+var test = require('./routes/test');
+var teach = require('./routes/teach.js');
+
+/*老师客户端*/
+var ctl = require('./routes/teach/login');
+
+
 var app = express();
-app.listen(8888);
+app.listen(8888,function () {
+    console.log(8888)
+});
+var md5=require("./routes/md5");
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -34,6 +44,9 @@ app.use("/api/login",login)
 app.use("/api/classes",classes)
 app.use("/api/stu",stu)
 app.use("/api/type",type)
+app.use("/api/test",test)
+app.use("/api/teach",teach)
+app.use("/api/ctl",ctl)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
