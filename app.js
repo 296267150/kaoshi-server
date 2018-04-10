@@ -17,6 +17,7 @@ var teach = require('./routes/teach.js');
 
 /*老师客户端*/
 var ctl = require('./routes/teach/login');
+var teachtest = require('./routes/teach/test');
 
 
 var app = express();
@@ -36,7 +37,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
 app.use('/', index);
 app.use('/users', users);
 app.use('/api/fangxiang', fangxiang);
@@ -47,6 +47,7 @@ app.use("/api/type",type)
 app.use("/api/test",test)
 app.use("/api/teach",teach)
 app.use("/api/ctl",ctl)
+app.use("/api/teachtest",teachtest)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
