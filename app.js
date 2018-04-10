@@ -18,6 +18,7 @@ var teach = require('./routes/teach.js');
 /*老师客户端*/
 var ctl = require('./routes/teach/login');
 var teachtest = require('./routes/teach/test');
+var teachzuti = require('./routes/teach/zuti');
 
 
 var app = express();
@@ -48,6 +49,7 @@ app.use("/api/test",test)
 app.use("/api/teach",teach)
 app.use("/api/ctl",ctl)
 app.use("/api/teachtest",teachtest)
+app.use("/api/teachzuti",teachzuti)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
