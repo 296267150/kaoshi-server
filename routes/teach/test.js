@@ -15,4 +15,12 @@ router.get('/select', function(req, res, next) {
   })
 });
 
+router.get("/tis",function (req,res) {
+
+    var tis=req.query.tis;
+    mysql.query("select * from test where id in ("+tis+") order by field (id,"+tis+")",function (err,result) {
+        res.end(JSON.stringify(result));
+    })
+})
+
 module.exports = router;
