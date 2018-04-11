@@ -21,6 +21,11 @@ var teachtest = require('./routes/teach/test');
 var teachzuti = require('./routes/teach/zuti');
 
 
+/*学生客户端*/
+
+var stulogin=require("./routes/stu/login")
+var stukaoshi=require("./routes/stu/kaoshi")
+
 var app = express();
 app.listen(8888,function () {
     console.log(8888)
@@ -50,6 +55,11 @@ app.use("/api/teach",teach)
 app.use("/api/ctl",ctl)
 app.use("/api/teachtest",teachtest)
 app.use("/api/teachzuti",teachzuti)
+
+/*学生端*/
+app.use("/api/stuLogin",stulogin)
+app.use("/api/stukaoshi",stukaoshi)
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
