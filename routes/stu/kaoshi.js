@@ -24,32 +24,45 @@ router.get('/kaoshi', function(req, res, next) {
 });
 
 router.get("/shiti",function (req,res) {
-    var id=req.query.id;
-    mysql.query("select * from zuti where id="+id,function (err,result) {
+    var zid=req.query.id;
+    var sid=req.query.sid;
 
-        var con=result[0].con.split("|");
-        var tis="";
-        var score=[];
-        for(var i=0;i<con.length;i++){
-            var arr=con[i].split(":");
-            tis+=arr[0]+","
-            score.push(arr[1]);
+    /*先查考过没有*/
+
+    mysql.query(`select * from result where zid=${zid} and sid=${sid}`,function (err2,result2) {
+        if(result2.length>0){
+            res.end("err")
+        }else{
+            mysql.query("select * from zuti where id="+zid,function (err,result) {
+                var con=result[0].con.split("|");
+                var tis="";
+                var score=[];
+                for(var i=0;i<con.length;i++){
+                    var arr=con[i].split(":");
+                    tis+=arr[0]+","
+                    score.push(arr[1]);
+                }
+
+                tis=tis.slice(0,-1);
+
+                mysql.query(`select * from test where id in (${tis}) order by field (id,${tis})`,function (err1,result1) {
+
+                    for(var i=0;i<result1.length;i++){
+                        result1[i].score=score[i]
+                        result1[i].options=result1[i].options.split("|");
+                        result1[i].info=[];
+                    }
+                    res.end(JSON.stringify(result1));
+                })
+
+
+            })
         }
-
-        tis=tis.slice(0,-1);
-
-        mysql.query(`select * from test where id in (${tis}) order by field (id,${tis})`,function (err1,result1) {
-
-            for(var i=0;i<result1.length;i++){
-                result1[i].score=score[i]
-                result1[i].options=result1[i].options.split("|");
-                result1[i].info=[];
-            }
-            res.end(JSON.stringify(result1));
-        })
-
-
     })
+
+
+
+
 })
 
 router.get("/result",function (req,res) {
@@ -66,6 +79,18 @@ router.get("/result",function (req,res) {
     console.log(sql);
     mysql.query(sql,[zid,sid,cid,selectSuccess,selectErr,jianda,jiandaScore,status],function (err,result) {
         if(result.affectedRows>0){
+            res.end("ok");
+        }
+    })
+})
+
+router.get("/check",function (req,res) {
+    var zid=req.query.zid;
+    var sid=req.query.sid;
+    mysql.query(`select * from result where zid=${zid} and sid=${sid}`,function (err,result) {
+        if(result.length>0){
+            res.end("err")
+        }else{
             res.end("ok");
         }
     })
