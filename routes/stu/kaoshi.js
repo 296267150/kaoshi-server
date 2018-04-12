@@ -97,6 +97,118 @@ router.get("/check",function (req,res) {
 })
 
 
+/*查询已经考过的*/
+
+router.get("/kaoshied",function (req,res) {
+
+    var sid=req.query.sid;
+    var sql="select  zuti.id as zutiid,teach.name as tname from result,zuti,teach where sid="+sid+" and result.zid=zuti.id and zuti.teachid=teach.id"
+    console.log(sql);
+    mysql.query(sql,function (err,result) {
+
+        res.end(JSON.stringify(result));
+    })
+})
+
+/*查询考完的结果*/
+
+router.get("/kaoshiedInfo",function (req,res) {
+    var zid=req.query.id;
+    var sid=req.query.sid;
+
+    //1.  查当前这套题
+
+    var tis="";
+    var scores=[];
+    mysql.query("select * from zuti where id="+zid,function (err,result) {
+        var con=result[0].con.split("|");
+
+        for(var i=0;i<con.length;i++){
+            var arr=con[i].split(":");
+            tis+=arr[0]+",";
+            scores.push(arr[1]);
+        }
+        tis=tis.slice(0,-1);
+
+        //2. 查询具体的题目
+
+        mysql.query(`select * from test where id in (${tis}) order by field (id,${tis})`,function (err1,result1) {
+           // console.log(result1);
+
+            //3. 查询你的答题的结果
+
+             mysql.query(`select * from result where sid=${sid} and zid=${zid}`,function (err2,result2) {
+
+                 // 得到 正确的题目
+
+                 var success=[];
+                 var errors=[];
+
+                 var arr=result2[0].selectSuccess.split("|");
+                 for(var i=0;i<arr.length;i++){
+                     var arr1=arr[i].split(":");
+                     success.push(arr1[0]);
+                 }
+
+                 var errarr=result2[0].selectErr.split("|");
+                 for(var i=0;i<errarr.length;i++){
+                     var errarrarr1=errarr[i].split(":");
+                     errors.push(errarrarr1[0]);
+                 }
+
+
+                 for(var i=0;i<result1.length;i++){
+
+                     result1[i].score=scores[i];
+                     result1[i].options=result1[i].options.split("|");
+                     if(result1[i].typeid==2){
+                         result1[i].daan=result1[i].daan.split("|")
+                     }
+
+
+                     var flag=true;
+                     for(var j=0;j<success.length;j++){
+                         if(result1[i].id==success[j]){
+                             flag=false
+                             result1[i].ok="yes";
+                             break;
+                         }
+                     }
+                     if(flag){
+                         result1[i].ok="no";
+                     }
+
+
+
+                 }
+
+
+                 console.log(result1)
+                res.end(JSON.stringify(result1));
+
+             })
+
+        })
+
+
+    })
+
+
+
+
+})
+
+
+router.get("/daanInfo",function (req,res) {
+
+    var id=req.query.id;
+    mysql.query("select daan from test where id="+id,function (err,result) {
+
+        res.end(JSON.stringify(result[0].daan))
+    })
+})
+
+
 
 
 module.exports = router;
