@@ -52,6 +52,25 @@ router.get("/shiti",function (req,res) {
     })
 })
 
+router.get("/result",function (req,res) {
+    var zid=req.query.zid;
+    var sid=req.query.sid;
+    var cid=req.query.cid;
+    var selectSuccess=req.query.selectSuccess;
+    var selectErr=req.query.selectErr;
+    var jianda=req.query.jianda;
+    var jiandaScore=req.query.jiandaScore;
+    var status=req.query.status;
+
+    var sql="insert into result (zid,sid,cid,selectSuccess,selectErr,jianda,jiandaScore,status) values (?,?,?,?,?,?,?,?)";
+    console.log(sql);
+    mysql.query(sql,[zid,sid,cid,selectSuccess,selectErr,jianda,jiandaScore,status],function (err,result) {
+        if(result.affectedRows>0){
+            res.end("ok");
+        }
+    })
+})
+
 
 
 
