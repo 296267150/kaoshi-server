@@ -3,7 +3,12 @@ var router = express.Router();
 var md5=require("../md5");
 var mysql=require("../mysql");
 
-/* GET home page. */
+/* GET home page.
+ *
+  *
+  *
+  * */
+
 router.get('/kaoshi', function(req, res, next) {
     var cid=req.query.cid;
     var nowtime=new Date().getTime()
@@ -27,7 +32,11 @@ router.get("/shiti",function (req,res) {
     var zid=req.query.id;
     var sid=req.query.sid;
 
-    /*先查考过没有*/
+    /*先查考过没有
+    *
+    *      事务处理
+    *   数据库的    库存  10     购物车 0
+    * */
 
     mysql.query(`select * from result where zid=${zid} and sid=${sid}`,function (err2,result2) {
         if(result2.length>0){
@@ -59,9 +68,6 @@ router.get("/shiti",function (req,res) {
             })
         }
     })
-
-
-
 
 })
 
@@ -156,29 +162,46 @@ router.get("/kaoshiedInfo",function (req,res) {
                      errors.push(errarrarr1[0]);
                  }
 
+                 var jianda=result2[0].jiandaScore.split("|");
+
+
+
+
 
                  for(var i=0;i<result1.length;i++){
 
-                     result1[i].score=scores[i];
-                     result1[i].options=result1[i].options.split("|");
-                     if(result1[i].typeid==2){
-                         result1[i].daan=result1[i].daan.split("|")
-                     }
+                     if(result1[i].typeid==3){
+                         for(var j=0;j<jianda.length;j++){
 
-
-                     var flag=true;
-                     for(var j=0;j<success.length;j++){
-                         if(result1[i].id==success[j]){
-                             flag=false
-                             result1[i].ok="yes";
-                             break;
+                           var arr=jianda[j].split(":")
+                             if(result1[i].id==arr[0]){
+                                 result1[i].score=arr[1];
+                             }
                          }
-                     }
-                     if(flag){
-                         result1[i].ok="no";
-                     }
+
+                         result1[i].ok="yes";
+
+                     }else {
+                         result1[i].score = scores[i];
+                         result1[i].options = result1[i].options.split("|");
+                         if (result1[i].typeid == 2) {
+                             result1[i].daan = result1[i].daan.split("|")
+                         }
 
 
+                         var flag = true;
+                         for (var j = 0; j < success.length; j++) {
+                             if (result1[i].id == success[j]) {
+                                 flag = false
+                                 result1[i].ok = "yes";
+                                 break;
+                             }
+                         }
+                         if (flag) {
+                             result1[i].ok = "no";
+                         }
+
+                     }
 
                  }
 

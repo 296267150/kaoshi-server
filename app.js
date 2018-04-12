@@ -51,6 +51,10 @@ app.use("/api/classes",classes)
 app.use("/api/stu",stu)
 app.use("/api/type",type)
 app.use("/api/test",test)
+
+
+
+/*老师端*/
 app.use("/api/teach",teach)
 app.use("/api/ctl",ctl)
 app.use("/api/teachtest",teachtest)
